@@ -1,0 +1,13 @@
+/* div{
+    border : 1px solid black;
+} */
+footer{ 
+    text-align : center;
+    position: fixed; 
+    left:0px; 
+    bottom:0px; 
+    height:40px; 
+    width:100%; 
+    background:grey; 
+    color: white; 
+}
