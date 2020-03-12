@@ -47,7 +47,7 @@ class AdminPage extends Component {
     const { users, loading } = this.state;
     return (
       <div>
-        <h1>Admin</h1>
+        <h1>User List</h1>
         {loading && <div>Loading ...</div>}
         <UserList users={users} />
       </div>
@@ -56,7 +56,7 @@ class AdminPage extends Component {
 }
 const UserList = ({ users }) => {
   if (users == null)
-    return (<div>df</div>);
+    return (<div>nothing</div>);
   else {
     return (
       <ul>
