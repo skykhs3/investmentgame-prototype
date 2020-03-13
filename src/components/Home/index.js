@@ -10,7 +10,7 @@ class HomePage extends React.Component {
   }
   componentDidMount() {
 
-console.log("Home:");
+console.log("Home:"+this.props.state.authUser.username);
    // <AuthUserContext.Consumer>
      // {sample => (
         
@@ -47,7 +47,7 @@ console.log("Home:");
       <AuthUserContext.Consumer>
         {sample => (
           <div>
-            <h1>{sample.state.authUser.username} 님의 잔고는 : ${sample.state.authUser.asset}입니다.</h1>
+            <h1>{this.props.state.authUser.username} 님의 잔고는 : ${sample.state.authUser.asset}입니다.</h1>
 
           </div>
         )}
@@ -56,6 +56,38 @@ console.log("Home:");
 
   }
 }
+// function homeForm(WrappedComponent) {
+//   return function UseSample(props) {
+//     return (
+//       <AuthUserContext.Consumer>
+//         {
+//           ({ state, actions }) => (
+//             <WrappedComponent
+//               state={state}
+//               actions={actions}
+//               firebase={this.props.firebase}
+//             />
+//           )
+//         }
+//       </AuthUserContext.Consumer>
+//     )
+//   }
+// }
+const withHomepage = Component => props => (
+  <AuthUserContext.Consumer>
+        {
+          ({ state, actions }) => (
+            <Component
+              {...props} state={state} actions={actions}
+            />
+          )
+        }
+  </AuthUserContext.Consumer>
+);
 
+//   <FirebaseContext.Consumer>
+//     {firebase => <Component {...props} firebase={firebase} />}
+//   </FirebaseContext.Consumer>
+// );
   const condition = authUser => !!authUser;
-  export default withAuthorization(condition)(HomePage); 
+  export default withAuthorization(condition)(withHomepage(HomePage)); 
