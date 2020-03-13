@@ -6,42 +6,48 @@ const withAuthentication = Component => {
     constructor(props) {
       super(props);
       this.state = {
+        
       };
-      this.action ={
-          setValue: (value) => {
-            this.setState({value});
-          }
+      this.action = {
+        setValue: (value) => {
+          this.setState({ value });
+        }
       }
     }
     componentDidMount() {
-     // console.log(JSON.stringify(this.state));
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
           authUser
-            ? this.setState({authUser})
+            ? this.setState({ authUser })
             : this.setState({ authUser: null });
 
-
-
-          if(authUser!=null){
-            this.props.firebase.user(authUser.uid).once('value').then( (snapshot) =>{
-          //    console.log(snapshot.val().username); 
-              this.setState({username:snapshot.val().username});
-          //    console.log(JSON.stringify(this.state));
-              })
+          if (authUser != null) {
+            this.props.firebase.user(authUser.uid).once('value').then((snapshot) => {
+              this.setState({ username: snapshot.val().username });
+            })
           }
-          
         }
       );
-      
+
+      this.props.firebase.db.ref('/notices').on('value',(snapshot)=>
+          {
+            console.log('withAuth changed');
+            const {isdisplayed,contents}=snapshot.val();
+            if(isdisplayed==true){
+              alert(contents);
+            }
+         //   this.setState({isdisplayed:isdisplayed,contents:contents})
+          });
+
     }
     componentWillUnmount() {
       this.listener();
     }
-    
     render() {
-      const {state,action}=this;
-      const value = {state, action};
+      var a=3/2;
+     // console.log(a);
+      const { state, action } = this;
+      const value = { state, action };
       return (
         <AuthUserContext.Provider value={value}>
           <Component {...this.props} />

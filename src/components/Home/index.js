@@ -4,6 +4,8 @@ import { AuthUserContext, withAuthorization } from '../Session';
 import PasswordChangeForm from '../PasswordChange';
 import './Home.css'
 import RoundDisplay from './RoundDisplay';
+import TimeDisplay from './TimeDisplay';
+import BtnList from './BtnList'
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -55,6 +57,8 @@ class HomePage extends React.Component {
     <div>
       <h1>{username} 님의 잔고 ${asset}</h1>
       <RoundDisplay round={round} caniinvest={caniinvest}/>
+      <TimeDisplay/>
+      <BtnList/>
     </div>
     
     );

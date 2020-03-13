@@ -13,7 +13,10 @@ import { withAuthentication } from '../Session';
 import './App.css'
 
 
-const App = () => (
+class App extends React.Component{
+  render(){
+   // console.log('App');
+    return(
   <Router>
     <div>
       <Navigation />
@@ -35,5 +38,7 @@ Copyright @ 2020 ICISTS Div. Tech & Design</div></footer>
   
     </div>
   </Router>
-);
+    );
+  }
+}
 export default withAuthentication(App);
