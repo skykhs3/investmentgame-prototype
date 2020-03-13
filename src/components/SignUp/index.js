@@ -38,6 +38,7 @@ class SignUpFormBase extends Component {
           .set({
             username,
             email,
+            asset:1000,
           });
          
       })

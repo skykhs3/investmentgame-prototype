@@ -6,7 +6,8 @@ const withAuthentication = Component => {
     constructor(props) {
       super(props);
       this.state = {
-        authUser: null,
+        authUser:{
+        }
       };
       this.action ={
           setValue: (value) => {
@@ -18,17 +19,20 @@ const withAuthentication = Component => {
       console.log(authUser.uid)
     }
     componentDidMount() {
+      console.log('with Authentication compoent did mount');
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
           authUser
-            ? this.setState({authUser})
+            ? this.setState({authUser:{...this.state.authUser,...authUser}})
             : this.setState({ authUser: null });
 
           if(authUser!=null){
             this.props.firebase.user(authUser.uid).once('value').then( (snapshot) =>{
-              console.log(snapshot.val().username); this.setState({authUser:{...authUser, username:snapshot.val().username}})
+              console.log(snapshot.val().username); this.setState({authUser:{
+                ...authUser, 
+                username:snapshot.val().username,
+              }})
             } )
-            console.log('test'+authUser.uid);
           }
         },
       );
