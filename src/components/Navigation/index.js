@@ -13,8 +13,8 @@ class Navigation extends React.Component{
   render(){
     return(
    <AuthUserContext.Consumer>
-      {authUser =>
-        authUser ? <NavigationAuth /> : <NavigationNonAuth />
+      {sample =>
+        sample.state.authUser ? <NavigationAuth /> : <NavigationNonAuth />
       }
     </AuthUserContext.Consumer>
     );

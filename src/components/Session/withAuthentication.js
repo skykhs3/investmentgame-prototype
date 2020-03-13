@@ -8,22 +8,35 @@ const withAuthentication = Component => {
       this.state = {
         authUser: null,
       };
+      this.action ={
+          setValue: (value) => {
+            this.setState({value});
+          }
+      }
+    }
+    printt=(authUser)=>{
+      console.log(authUser.uid)
     }
     componentDidMount() {
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
           authUser
-            ? this.setState({ authUser })
+            ? this.setState({authUser})
             : this.setState({ authUser: null });
+
+          if(authUser!=null) console.log(authUser.uid);
         },
       );
     }
     componentWillUnmount() {
       this.listener();
     }
+    
     render() {
+      const {state,action}=this;
+      const value = {state, action};
       return (
-        <AuthUserContext.Provider value={this.state.authUser}>
+        <AuthUserContext.Provider value={value}>
           <Component {...this.props} />
         </AuthUserContext.Provider>
       );
