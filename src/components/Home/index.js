@@ -9,18 +9,19 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props)
     this.state={
+      username:"name loading...",
       asset:0,
+      round:0,
     }
+  }
+  shouldComponentUpdate(nextProps, nextState) {
+    if(this.state.round!=0 && nextState.round!=this.state.round){
+      alert("Round changed");
+    }
+    return true;
   }
   componentDidMount() {
     this.setState({ loading: true });
-    // this.props.firebase.users().on('value', snapshot => {
-    //   const usersObject = snapshot.val();
-    //   console.log('Home :  '+JSON.stringify(usersObject));
-    //   const test=this.props.firebase.auth.currentUser.uid;
-    //   console.log(test);
-    // //  console.log(JSON.stringify(this.props.state));
-    // });
     this.props.firebase.user(this.props.firebase.auth.currentUser.uid).on('value', snapshot => {
       const usersObject = snapshot.val();
       
@@ -31,13 +32,13 @@ class HomePage extends React.Component {
       console.log(test);
 
       this.setState({
-        asset:usersObject.asset,
         username:usersObject.username,
+        asset:usersObject.asset,
+        
       });
     //  console.log(JSON.stringify(this.props.state));
     });
     this.props.firebase.db.ref('/gamestate').on('value',snapshot=>{
-    //  console.log(snapshot.val());
       const usersObject = snapshot.val();
       this.setState({
         round:usersObject.round,

@@ -9,7 +9,6 @@ class AccountPage extends React.Component{
     super(props)
   }
   render(){
-
     return(
   <AuthUserContext.Consumer>
   {sample => (
