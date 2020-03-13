@@ -42,7 +42,7 @@ class SignUpFormBase extends Component {
           });
          
       })
-      .then(authUser => {
+      .then(() => {
         this.setState({ ...INITIAL_STATE });
         this.props.firebase.auth.signOut()
         this.props.history.push(ROUTES.SIGN_UP);

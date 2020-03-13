@@ -6,8 +6,6 @@ const withAuthentication = Component => {
     constructor(props) {
       super(props);
       this.state = {
-        authUser:{
-        }
       };
       this.action ={
           setValue: (value) => {
@@ -15,27 +13,27 @@ const withAuthentication = Component => {
           }
       }
     }
-    printt=(authUser)=>{
-      console.log(authUser.uid)
-    }
     componentDidMount() {
-      console.log('with Authentication compoent did mount');
+     // console.log(JSON.stringify(this.state));
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
           authUser
-            ? this.setState({authUser:{...this.state.authUser,...authUser}})
+            ? this.setState({authUser})
             : this.setState({ authUser: null });
+
+
 
           if(authUser!=null){
             this.props.firebase.user(authUser.uid).once('value').then( (snapshot) =>{
-              console.log(snapshot.val().username); this.setState({authUser:{
-                ...authUser, 
-                username:snapshot.val().username,
-              }})
-            } )
+          //    console.log(snapshot.val().username); 
+              this.setState({username:snapshot.val().username});
+          //    console.log(JSON.stringify(this.state));
+              })
           }
-        },
+          
+        }
       );
+      
     }
     componentWillUnmount() {
       this.listener();
