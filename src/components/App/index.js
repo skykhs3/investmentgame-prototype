@@ -29,8 +29,9 @@ const App = () => (
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADMIN} component={AdminPage} />
 
-      <footer className ="copyrightFooter"> N13-1, KAIST 291 DAEHAK-RO, YUSEONG-GU, DAEJEON, KOREA<br></br>
-Copyright @ 2020 ICISTS Div. Tech & Design</footer> 
+      <div className = 'footerheight'></div>
+      <footer><div className ="copyrightFooter"> N13-1, KAIST 291 DAEHAK-RO, YUSEONG-GU, DAEJEON, KOREA<br></br>
+Copyright @ 2020 ICISTS Div. Tech & Design</div></footer> 
   
     </div>
   </Router>

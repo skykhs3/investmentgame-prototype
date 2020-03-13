@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
+import { AuthUserContext, withAuthorization } from '../Session';
+
+import adminUID from '../Session/adminUID'
+
 import { withFirebase } from '../Firebase';
 import { compose } from 'recompose';
 
@@ -39,7 +43,8 @@ class SignUpFormBase extends Component {
       })
       .then(authUser => {
         this.setState({ ...INITIAL_STATE });
-        this.props.history.push(ROUTES.HOME);
+        this.props.firebase.auth.signOut()
+        this.props.history.push(ROUTES.SIGN_UP);
       })
       .catch(error => {
         this.setState({ error });
@@ -101,9 +106,9 @@ const SignUpLink = () => (
     Don't have an account? <Link to={ROUTES.SIGN_UP}>Sign Up</Link>
   </p>
 );
-const SignUpForm = compose(
-  withRouter,
-  withFirebase,
-)(SignUpFormBase);
+const condition = authUser => true ;
+//&& authUser.uid===adminUID;
+
+const SignUpForm = withAuthorization(condition)(SignUpFormBase);
 export default SignUpPage;
 export { SignUpForm, SignUpLink };
