@@ -28,12 +28,12 @@ class SignUpFormBase extends Component {
   }
   onSubmit = event => {
     const { username, email, passwordOne } = this.state;
-    // const mountInfo={};
-    //     for(var i=0;i<noC;i++){
+    var mountInfo2={};
+    for(var i=0;i<noC;i++){
 
-    //       mountInfo={...mountInfo,  i:{amountMoney:0} };
-    //     }
-    // console.log(JSON.stringify(mountInfo));
+      mountInfo2={...mountInfo2, [i]:{amountMoney:0}};
+    }
+  // console.log(JSON.stringify(mountInfo2));
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
@@ -44,7 +44,7 @@ class SignUpFormBase extends Component {
             username,
             email,
             asset:1000,
-            mountInfo:1,
+            mountInfo:mountInfo2,
           });
       })
       .then(() => {
