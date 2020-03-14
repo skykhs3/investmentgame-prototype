@@ -13,9 +13,9 @@ class HomePage extends React.Component {
       username: "name loading...",
       asset: 0,
       round: 0,
-      willdo:[],
+      willdo: [],
     }
-    for(var i=0;i<noC;i++)
+    for (var i = 0; i < noC; i++)
       this.state.willdo.push(0);
   }
   shouldComponentUpdate(nextProps, nextState) {
@@ -31,7 +31,7 @@ class HomePage extends React.Component {
       this.setState({
         username: usersObject.username,
         asset: usersObject.asset,
-        mountInfo:usersObject.mountInfo,
+        mountInfo: usersObject.mountInfo,
       });
     });
     this.props.firebase.db.ref('gamestate').on('value', snapshot => {
@@ -41,30 +41,43 @@ class HomePage extends React.Component {
         caniinvest: usersObject.caniinvest,
       });
     });
-    this.props.firebase.db.ref('companies').on('value',snapshot => {
+    this.props.firebase.db.ref('companies').on('value', snapshot => {
       const usersObject = snapshot.val();
 
       const usersList = Object.keys(usersObject).map(key => ({
         ...usersObject[key],
       }));
-      this.setState({companies:usersList});
+      this.setState({ companies: usersList });
     });
   }
+  onwilldoChange = (i, num) => {
+    const { willdo } = this.state;
+    willdo[i] = Number(num);
+    this.setState({ willdo: willdo });
+  }
   render() {
-     console.log("Home render");
+    console.log("Home render");
     const { username, asset, round, caniinvest } = this.state;
-    var sum=0,sum2=0;
-    var item=[];
+    var sum = 0;
+    var sum2 = 0;
+    var item = [];
     for (var i = 0; i < noC; i++) {
-      
-       if(this.state.companies!=undefined){
-        sum+=this.state.mountInfo[i].amountMoney;
-        sum2+=this.state.willdo[i];
+
+      if (this.state.companies != undefined) {
+        sum += this.state.mountInfo[i].amountMoney;
+        sum2 += this.state.willdo[i];
         console.log(JSON.stringify(this.state.companies));
-        item.push(<CoInfo key={i} Conum={i} Coname={this.state.companies[i].name}
-        amountMoney={this.state.mountInfo[i].amountMoney} firebase={this.props.firebase}/> );
+        item.push(<CoInfo
+          key={i}
+          Conum={i}
+          Coname={this.state.companies[i].name}
+          amountMoney={this.state.mountInfo[i].amountMoney}
+          firebase={this.props.firebase}
+          onwilldoChange={this.onwilldoChange}
+        />);
       }
     }
+    //window.confirm("ㅑ잇");
 
     return (
 
@@ -78,9 +91,9 @@ class HomePage extends React.Component {
           <th>투자 or 회수할 금액</th>
           {item}
           <tr>
-    <td>Total</td>
-    <td>{sum}</td>
-    <td>{sum2}</td>
+            <td>Total</td>
+            <td>{sum}</td>
+            <td>{sum2}</td>
           </tr>
         </table>
       </div>
