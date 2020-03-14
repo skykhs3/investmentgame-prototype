@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link, withRouter } from 'react-router-dom';
 import * as ROUTES from '../../constants/routes';
 import { AuthUserContext, withAuthorization } from '../Session';
-
+import noC from '../../constants/noC'
 import adminUID from '../Session/adminUID'
 
 import { withFirebase } from '../Firebase';
@@ -28,24 +28,29 @@ class SignUpFormBase extends Component {
   }
   onSubmit = event => {
     const { username, email, passwordOne } = this.state;
+    // const mountInfo={};
+    //     for(var i=0;i<noC;i++){
+
+    //       mountInfo={...mountInfo,  i:{amountMoney:0} };
+    //     }
+    // console.log(JSON.stringify(mountInfo));
     this.props.firebase
       .doCreateUserWithEmailAndPassword(email, passwordOne)
       .then(authUser => {
         // Create a user in your Firebase realtime database
-    //    this.props.firebase.user('test').set({});
         return this.props.firebase
           .user(authUser.user.uid)
           .set({
             username,
             email,
             asset:1000,
+            mountInfo:1,
           });
-         
       })
       .then(() => {
         this.setState({ ...INITIAL_STATE });
-        this.props.firebase.auth.signOut()
-        this.props.history.push(ROUTES.SIGN_UP);
+        //this.props.firebase.auth.signOut()
+        this.props.history.push(ROUTES.HOME);
       })
       .catch(error => {
         this.setState({ error });

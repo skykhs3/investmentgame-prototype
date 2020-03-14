@@ -20,12 +20,6 @@ const withAuthentication = Component => {
           authUser
             ? this.setState({ authUser })
             : this.setState({ authUser: null });
-
-          if (authUser != null) {
-            this.props.firebase.user(authUser.uid).once('value').then((snapshot) => {
-              this.setState({ username: snapshot.val().username });
-            })
-          }
         }
       );
 
@@ -44,7 +38,7 @@ const withAuthentication = Component => {
       this.listener();
     }
     render() {
-      var a=3/2;
+     // var a=3/2;
      // console.log(a);
       const { state, action } = this;
       const value = { state, action };
