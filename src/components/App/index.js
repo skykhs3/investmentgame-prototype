@@ -8,6 +8,7 @@ import PasswordForgetPage from '../PasswordForget';
 import HomePage from '../Home';
 import AccountPage from '../Account';
 import AdminPage from '../Admin';
+import UserlistPage from '../Userlist'
 import * as ROUTES from '../../constants/routes';
 import { withAuthentication } from '../Session';
 import './App.css'
@@ -31,6 +32,7 @@ class App extends React.Component{
       <Route path={ROUTES.HOME} component={HomePage} />
       <Route path={ROUTES.ACCOUNT} component={AccountPage} />
       <Route path={ROUTES.ADMIN} component={AdminPage} />
+      <Route path={ROUTES.USERLIST} component={UserlistPage} />
 
       <div className = 'footerheight'></div>
       <footer><div className ="copyrightFooter"> N13-1, KAIST 291 DAEHAK-RO, YUSEONG-GU, DAEJEON, KOREA<br></br>

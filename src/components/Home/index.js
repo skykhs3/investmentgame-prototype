@@ -36,7 +36,7 @@ class HomePage extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     const nextRound=nextState.round;
     if (this.state.round != 0 && nextState.round != this.state.round) {
-      alert(`Round is changed. \n${nextRound-1} Round ➝ ${nextRound} Round`);
+      alert(`Round is changed. \n${this.state.round} Round ➝ ${nextRound} Round`);
      // this.submit(nextState.round);
     }
     return true;
