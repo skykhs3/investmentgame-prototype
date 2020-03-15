@@ -30,17 +30,14 @@ class HomePage extends React.Component {
           label: 'Ok',
           onClick: () => {}
         },
-        // {
-        //   label: 'No',
-        //   onClick: () => alert('Click No')
-        // }
       ]
     });
   };
   shouldComponentUpdate(nextProps, nextState) {
+    const nextRound=nextState.round;
     if (this.state.round != 0 && nextState.round != this.state.round) {
-     // alert("Round!!!");
-      this.submit(nextState.round);
+      alert(`Round is changed. \n${nextRound-1} Round ➝ ${nextRound} Round`);
+     // this.submit(nextState.round);
     }
     return true;
   }
@@ -90,6 +87,7 @@ class HomePage extends React.Component {
         sum2 += this.state.willdo[i];
       //  console.log(JSON.stringify(this.state.companies));
         item.push(<CoInfo
+          caniinvest={this.state.caniinvest}
           key={i}
           Conum={i}
           Coname={this.state.companies[i].name}

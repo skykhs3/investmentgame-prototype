@@ -56,11 +56,11 @@ class CoInfo extends React.Component{
                     // console.log(JSON.stringify(post));
                     // console.log(this.props.Coname);
                     // console.log(this.props.Conum);
-                    if(post.asset-Number(this.state.money)<0){
+                    if(post.asset-Number(this.state.money)<0 || Number(this.state.money)<0){
                         alert('Invaild');
                         return(post);
                     }
-                    const answer=window.confirm('투자 버튼 누름 ㅇㅈ?');
+                    const answer=window.confirm(`투자액은 ${this.state.money} 입니다. \n투자 하시겠습니까?`);
                     if(answer){
                     post.mountInfo[this.props.Conum].amountMoney+=Number(this.state.money);
                     post.asset-=Number(this.state.money);
@@ -81,15 +81,15 @@ class CoInfo extends React.Component{
         else{
             await this.props.firebase.user(this.props.firebase.auth.currentUser.uid).transaction((post)=>{
                 if (post) {
-                    if(post.mountInfo[this.props.Conum].amountMoney-Number(this.state.money)<0){
+                    if(post.mountInfo[this.props.Conum].amountMoney-Number(this.state.money)<0 || Number(this.state.money)<0){
                         alert('Invaild');
                         return(post);
                     }
-                    const answer=window.confirm('철회 버튼 누름 ㅇㅈ?');
+                    const answer=window.confirm(`실질 회수액은 ${Math.floor(Number(this.state.money)*(1-this.props.roundfees))} 입니다.\n회수 하시겠습니까?`);
                     if(answer){
                     post.mountInfo[this.props.Conum].amountMoney-=Number(this.state.money);
                     console.log(this.props.roundfees);
-                    post.asset+=Number(this.state.money)*(1-this.props.roundfees);
+                    post.asset+=Math.floor(Number(this.state.money)*(1-this.props.roundfees));
                     this.handleReset();
                     return (post);
                     }
@@ -114,8 +114,8 @@ class CoInfo extends React.Component{
           placeholder="0"
         /></td>
 
-        <td><button type="submit" onClick={this.handleInvest} disabled={!this.state.survive} >투자</button></td>
-        <td><button type="submit" onClick={this.handleWithdraw} disabled={!this.state.survive}>철회</button></td>
+        <td><button type="submit" onClick={this.handleInvest} disabled={!this.state.survive || !this.props.caniinvest} >투자</button></td>
+        <td><button type="submit" onClick={this.handleWithdraw} disabled={!this.state.survive || !this.props.caniinvest}>철회</button></td>
         <td><button type="submit" onClick={this.handleReset}>입력 초기화</button></td>
         {/* <td><button type="submit" onClick={this.arrowFunction}>Testbtn</button></td> */}
         </tr>

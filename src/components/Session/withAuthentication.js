@@ -1,6 +1,8 @@
 import React from 'react';
 import AuthUserContext from './context';
 import { withFirebase } from '../Firebase';
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 const withAuthentication = Component => {
   class WithAuthentication extends React.Component {
     constructor(props) {
@@ -14,6 +16,18 @@ const withAuthentication = Component => {
         }
       }
     }
+    submit = (contents) => {
+      confirmAlert({
+        title: 'Notice',
+        message: `${contents}`,
+        buttons: [
+          {
+            label: 'Ok',
+            onClick: () => {}
+          },
+        ]
+      });
+    };
     componentDidMount() {
       this.listener = this.props.firebase.auth.onAuthStateChanged(
         authUser => {
@@ -28,6 +42,7 @@ const withAuthentication = Component => {
             console.log('withAuth changed');
             const {isdisplayed,contents}=snapshot.val();
             if(isdisplayed==true){
+             // this.submit(contents);
               alert(contents);
             }
          //   this.setState({isdisplayed:isdisplayed,contents:contents})
