@@ -5,6 +5,8 @@ import RoundDisplay from './RoundDisplay';
 import TimeDisplay from './TimeDisplay';
 import CoInfo from './CoInfo'
 import noC from '../../constants/noC'
+import { confirmAlert } from 'react-confirm-alert'; // Import
+import 'react-confirm-alert/src/react-confirm-alert.css'; 
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -14,13 +16,31 @@ class HomePage extends React.Component {
       asset: 0,
       round: 0,
       willdo: [],
+      roundfees:0.05,
     }
     for (var i = 0; i < noC; i++)
       this.state.willdo.push(0);
   }
+  submit = (nextRound) => {
+    confirmAlert({
+      title: 'Notice',
+      message: `Round is changed. ${nextRound-1} Round ➝ ${nextRound} Round`,
+      buttons: [
+        {
+          label: 'Ok',
+          onClick: () => {}
+        },
+        // {
+        //   label: 'No',
+        //   onClick: () => alert('Click No')
+        // }
+      ]
+    });
+  };
   shouldComponentUpdate(nextProps, nextState) {
     if (this.state.round != 0 && nextState.round != this.state.round) {
-      alert("Round changed");
+     // alert("Round!!!");
+      this.submit(nextState.round);
     }
     return true;
   }
@@ -39,7 +59,9 @@ class HomePage extends React.Component {
       this.setState({
         round: usersObject.round,
         caniinvest: usersObject.caniinvest,
+        roundfees:usersObject.roundfees[usersObject.round],
       });
+    
     });
     this.props.firebase.db.ref('companies').on('value', snapshot => {
       const usersObject = snapshot.val();
@@ -56,7 +78,7 @@ class HomePage extends React.Component {
     this.setState({ willdo: willdo });
   }
   render() {
-    console.log("Home render");
+   // console.log("Home render");
     const { username, asset, round, caniinvest } = this.state;
     var sum = 0;
     var sum2 = 0;
@@ -66,7 +88,7 @@ class HomePage extends React.Component {
       if (this.state.companies != undefined) {
         sum += this.state.mountInfo[i].amountMoney;
         sum2 += this.state.willdo[i];
-        console.log(JSON.stringify(this.state.companies));
+      //  console.log(JSON.stringify(this.state.companies));
         item.push(<CoInfo
           key={i}
           Conum={i}
@@ -74,6 +96,7 @@ class HomePage extends React.Component {
           amountMoney={this.state.mountInfo[i].amountMoney}
           firebase={this.props.firebase}
           onwilldoChange={this.onwilldoChange}
+          roundfees={this.state.roundfees}
         />);
       }
     }
