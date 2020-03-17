@@ -1,12 +1,14 @@
 import React from 'react';
+import { PasswordForgetForm } from '../PasswordForget';
 import { AuthUserContext, withAuthorization } from '../Session';
+import PasswordChangeForm from '../PasswordChange';
 import './Home.css'
 import RoundDisplay from './RoundDisplay';
 import TimeDisplay from './TimeDisplay';
 import CoInfo from './CoInfo'
 import noC from '../../constants/noC'
 import { confirmAlert } from 'react-confirm-alert'; // Import
-import 'react-confirm-alert/src/react-confirm-alert.css'; 
+import 'react-confirm-alert/src/react-confirm-alert.css';
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -16,31 +18,24 @@ class HomePage extends React.Component {
       asset: 0,
       round: 0,
       willdo: [],
-      roundfees:0.05,
+      roundfees: 0.05,
     }
-    for (var i = 0; i < noC; i++)
+    for(let i = 0; i < noC; i++)
       this.state.willdo.push(0);
   }
   submit = (nextRound) => {
     confirmAlert({
       title: 'Notice',
-      message: `Round is changed. ${nextRound-1} Round ➝ ${nextRound} Round`,
+      message: `Round is changed. ${nextRound - 1} Round ➝ ${nextRound} Round`,
       buttons: [
         {
           label: 'Ok',
-          onClick: () => {}
+          onClick: () => { }
         },
       ]
     });
   };
-  shouldComponentUpdate(nextProps, nextState) {
-    const nextRound=nextState.round;
-    if (this.state.round != 0 && nextState.round != this.state.round) {
-      alert(`Round is changed. \n${this.state.round} Round ➝ ${nextRound} Round`);
-     // this.submit(nextState.round);
-    }
-    return true;
-  }
+
   componentDidMount() {
     this.setState({ loading: true });
     this.props.firebase.user(this.props.firebase.auth.currentUser.uid).on('value', snapshot => {
@@ -56,9 +51,9 @@ class HomePage extends React.Component {
       this.setState({
         round: usersObject.round,
         caniinvest: usersObject.caniinvest,
-        roundfees:usersObject.roundfees[usersObject.round],
+        roundfees: usersObject.roundfees[usersObject.round],
       });
-    
+
     });
     this.props.firebase.db.ref('companies').on('value', snapshot => {
       const usersObject = snapshot.val();
@@ -75,17 +70,20 @@ class HomePage extends React.Component {
     this.setState({ willdo: willdo });
   }
   render() {
-   // console.log("Home render");
+    // console.log("Home render");
     const { username, asset, round, caniinvest } = this.state;
     var sum = 0;
     var sum2 = 0;
     var item = [];
-    for (var i = 0; i < noC; i++) {
+
+
+
+    for (let i = 0; i < noC; i++) {
 
       if (this.state.companies != undefined) {
         sum += this.state.mountInfo[i].amountMoney;
         sum2 += this.state.willdo[i];
-      //  console.log(JSON.stringify(this.state.companies));
+        //  console.log(JSON.stringify(this.state.companies));
         item.push(<CoInfo
           caniinvest={this.state.caniinvest}
           key={i}
@@ -98,7 +96,31 @@ class HomePage extends React.Component {
         />);
       }
     }
-    //window.confirm("ㅑ잇");
+
+    ///---alert 출력///
+    if (this.props.firebase.auth.currentUser != null) {
+      this.props.firebase.user(this.props.firebase.auth.currentUser.uid).child("messages").child("front").on('value', snapshot => {
+        this.props.firebase.user(this.props.firebase.auth.currentUser.uid).child("messages").transaction(snapshot => {
+          if(snapshot==null){
+            console.log('messages null!!!');
+            return snapshot;
+          }
+          if(snapshot.queue==undefined)
+            return snapshot;
+          while(snapshot.front<snapshot.queue.length-1){
+            
+            snapshot.front++;
+            alert(snapshot.queue[snapshot.front]);
+          
+          }
+          return snapshot;
+
+        }
+        )
+      });
+    }
+    ///alert 출력---///
+
 
     return (
 

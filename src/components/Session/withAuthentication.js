@@ -36,18 +36,6 @@ const withAuthentication = Component => {
             : this.setState({ authUser: null });
         }
       );
-
-      this.props.firebase.db.ref('/notices').on('value',(snapshot)=>
-          {
-            console.log('withAuth changed');
-            const {isdisplayed,contents}=snapshot.val();
-            if(isdisplayed==true){
-             // this.submit(contents);
-              alert(contents);
-            }
-         //   this.setState({isdisplayed:isdisplayed,contents:contents})
-          });
-
     }
     componentWillUnmount() {
       this.listener();
