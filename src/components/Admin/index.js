@@ -17,7 +17,7 @@ class AdminPage extends Component {
     for (let i = 0; i < noC; i++) {
       this.state.eliminated.push(false);
       this.state.checked = false;
-      this.state.survived.push(false);
+      this.state.survived.push(0);
     }
 
   }
@@ -98,16 +98,12 @@ class AdminPage extends Component {
     this.setState({ eliminated: eliminated })
   }
 
-  ///떨어지는 기업들-->
+  ///떨어지는 기업들에 투자한 금액 0으로 만듦-->
   onCheckBoxButtonClick = async (e) => {
-
-
     const list = [];
     for (let i = 0; i < noC; i++) {
       if (this.state.eliminated[i]) {
-
         this.props.firebase.db.ref().transaction(snapshot => {
-
           if (snapshot == null) return null;
           // console.log(i);
           snapshot.companies[i].survive = false;
@@ -117,20 +113,20 @@ class AdminPage extends Component {
           return snapshot;
         });
       }
-
       list.push(false);
     }
-    
     this.setState({ eliminated: list });
-
   }
   ///<--떨어지는 기업들
 
+onClickRewardButton=(e)=>{
+  e.preventDefault();
+  alert('에욱');
+}
+
   render() {
 
-
     const { users, loading, companies } = this.state;
-
 
     let faillist = [];
 
@@ -147,10 +143,10 @@ class AdminPage extends Component {
     if (companies.length > 0) {
       //console.log(JSON.stringify(companies));
       for (let i = 0; i < noC; i++) {
-        rewardlist.push(<div>{companies[i].name} : <input type='textbox' size={3} checked={this.state.eliminated[i]} value={this.state.survive}></input>%</div>);
+        rewardlist.push(<div>{companies[i].name} : <input type='textbox' size={3} checked={this.state.eliminated[i]} value={this.state.survived[i]}></input>%</div>);
       }
     } 
-    
+    //<-기업 순위에 따른 리워드 참가자들에게 제공
 
 
 ///-> 렌더링 리턴
@@ -171,7 +167,10 @@ class AdminPage extends Component {
         </p>
         <p>
         What percentage of the amount of money the participants invest in a company are compensated?
+        <form onSubmit={this.onClickRewardButton}>
        <div>{rewardlist}</div>
+       <button>submit</button>
+       </form>
         </p>
 
         <p>
@@ -194,7 +193,7 @@ class AdminPage extends Component {
 }
 ///<- 렌더링 리턴
 
-//////Lists
+//////Lists-->
 
 const CompanyList = ({ companies }) => {
 
@@ -216,11 +215,8 @@ const CompanyList = ({ companies }) => {
         <li >
           <p>
             <strong>name: </strong> {user.name}
-
             <strong> / ranking: </strong> {user.ranking}
-
             <strong> / amount: </strong> {user.amountMoney}
-
           </p>
         </li>
       ))}
