@@ -101,52 +101,89 @@ class AdminPage extends Component {
   ///떨어지는 기업들에 투자한 금액 0으로 만듦-->
   onCheckBoxButtonClick = async (e) => {
     const list = [];
-    for (let i = 0; i < noC; i++) {
-      if (this.state.eliminated[i]) {
-        this.props.firebase.db.ref().transaction(snapshot => {
-          if (snapshot == null) return null;
-          // console.log(i);
+    await this.props.firebase.db.ref().transaction(snapshot=>{
+      if(snapshot==null) return snapshot;
+      for (let i = 0; i < noC; i++) {
+        if (this.state.eliminated[i]) {
           snapshot.companies[i].survive = false;
           for (let key in snapshot.users) {
             snapshot.users[key].mountInfo[i].amountMoney = 0;
           }
-          return snapshot;
-        });
+        }
+        list.push(false);
       }
-      list.push(false);
-    }
+      return snapshot;
+    });
     this.setState({ eliminated: list });
   }
   ///<--떨어지는 기업들
 
-onClickRewardButton=(e)=>{
+onTextBoxClick=(i)=>(e)=>{
+  const{survived}=this.state;
+  survived[i]=e.target.value;
+  this.setState({survived});
+}
+  //->리워드 버튼 눌렀을때
+onClickRewardButton=async (e)=>{
   e.preventDefault();
-  alert('에욱');
+  const list = [];
+    await this.props.firebase.db.ref().transaction(snapshot=>{
+      if(snapshot==null) return snapshot;
+      for(let key in snapshot.users){
+        let  rewardSum=0;
+      //  console.log(rewardSum);
+    //    console.log(key,JSON.stringify(snapshot.users[key]));
+        for(let i=0;i<noC;i++){
+        //  console.log(key,JSON.stringify(snapshot.users[key].mountInfo[i]));
+          rewardSum+=snapshot.users[key].mountInfo[i].amountMoney*this.state.survived[i]/100;
+        }
+     //  console.log(rewardSum);
+       // console.log(snapshot.users[key].username,Math.floor(rewardSum));
+       // console.log(JSON.stringify(snapshot.users[key].messages.queue));
+       const Reward=rewardSum+500;
+       snapshot.users[key].asset+=Reward;
+        if(snapshot.users[key].messages.queue==undefined){
+          snapshot.users[key].messages.queue={0:`리워드와 월급 포함 ${Reward} 지급되었습니다.`};
+        }
+        else{
+          const leng=snapshot.users[key].messages.queue.length;
+          snapshot.users[key].messages.queue={...snapshot.users[key].messages.queue,
+             [snapshot.users[key].messages.queue.length]: `리워드와 월급 포함 ${Reward} 지급되었습니다.`};
+        }
+        
+      }
+      return snapshot;
+    });
+    for(let i=0;i<noC;i++)
+      list.push(0);
+    this.setState({ survived: list });
 }
 
   render() {
 
     const { users, loading, companies } = this.state;
 
-    let faillist = [];
-
-    //기업 탈락 체크 박스 설치
-    if (companies.length > 0) {
-      //console.log(JSON.stringify(companies));
-      for (let i = 0; i < noC; i++) {
-        faillist.push(<div>{companies[i].name} : <input type='checkbox' onClick={this.onCheckBoxClick(i)} checked={this.state.eliminated[i]}></input></div>);
-      }
-    }
+    
 
     //->기업 순위에 따른 리워드 참가자들에게 제공
     let rewardlist=[];
     if (companies.length > 0) {
       //console.log(JSON.stringify(companies));
       for (let i = 0; i < noC; i++) {
-        rewardlist.push(<div>{companies[i].name} : <input type='textbox' size={3} checked={this.state.eliminated[i]} value={this.state.survived[i]}></input>%</div>);
+        rewardlist.push(<div>{companies[i].name} : <input type='textbox' size={3} checked={this.state.eliminated[i]} value={this.state.survived[i]} onChange={this.onTextBoxClick(i)}></input>%</div>);
       }
     } 
     //<-기업 순위에 따른 리워드 참가자들에게 제공
+
+    //기업 탈락 체크 박스 설치
+    let faillist = [];
+    
+    if (companies.length > 0) {
+      //console.log(JSON.stringify(companies));
+      for (let i = 0; i < noC; i++) {
+        faillist.push(<div>{companies[i].name} : <input type='checkbox' onClick={this.onCheckBoxClick(i)} checked={this.state.eliminated[i]}></input></div>);
+      }
+    }
 
 
 ///-> 렌더링 리턴

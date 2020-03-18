@@ -41,8 +41,6 @@ const withAuthentication = Component => {
       this.listener();
     }
     render() {
-     // var a=3/2;
-     // console.log(a);
       const { state, action } = this;
       const value = { state, action };
       return (

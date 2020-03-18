@@ -36,9 +36,9 @@ class HomePage extends React.Component {
     });
   };
 
-  componentDidMount() {
+ async componentDidMount() {
     this.setState({ loading: true });
-    this.props.firebase.user(this.props.firebase.auth.currentUser.uid).on('value', snapshot => {
+    await this.props.firebase.user(this.props.firebase.auth.currentUser.uid).on('value', snapshot => {
       const usersObject = snapshot.val();
       this.setState({
         username: usersObject.username,
@@ -46,7 +46,7 @@ class HomePage extends React.Component {
         mountInfo: usersObject.mountInfo,
       });
     });
-    this.props.firebase.db.ref('gamestate').on('value', snapshot => {
+    await this.props.firebase.db.ref('gamestate').on('value', snapshot => {
       const usersObject = snapshot.val();
       this.setState({
         round: usersObject.round,
@@ -55,7 +55,7 @@ class HomePage extends React.Component {
       });
 
     });
-    this.props.firebase.db.ref('companies').on('value', snapshot => {
+    await this.props.firebase.db.ref('companies').on('value', snapshot => {
       const usersObject = snapshot.val();
 
       const usersList = Object.keys(usersObject).map(key => ({
@@ -80,7 +80,9 @@ class HomePage extends React.Component {
 
     for (let i = 0; i < noC; i++) {
 
-      if (this.state.companies != undefined) {
+      if (this.state.companies != undefined && this.state.mountInfo!=undefined) {
+           // console.log(JSON.stringify(this.state.companies));
+           // console.log(JSON.stringify(this.state.mountInfo));
         sum += this.state.mountInfo[i].amountMoney;
         sum2 += this.state.willdo[i];
         //  console.log(JSON.stringify(this.state.companies));
