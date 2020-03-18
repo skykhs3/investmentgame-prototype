@@ -144,7 +144,6 @@ onClickRewardButton=async (e)=>{
           snapshot.users[key].messages.queue={0:message};
         }
         else{
-          const leng=snapshot.users[key].messages.queue.length;
           snapshot.users[key].messages.queue={...snapshot.users[key].messages.queue,
              [snapshot.users[key].messages.queue.length]: message};
         }
