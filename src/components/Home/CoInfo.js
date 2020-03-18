@@ -12,7 +12,6 @@ class CoInfo extends React.Component{
     componentDidMount(){
         this.props.firebase.company(this.props.Conum).on('value',snapshot=>{
             const companyObject=snapshot.val();
-            console.log(JSON.stringify(companyObject)+' '+companyObject.survive);
             this.setState({survive:companyObject.survive});
         })
     }

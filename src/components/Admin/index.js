@@ -131,24 +131,22 @@ onClickRewardButton=async (e)=>{
       if(snapshot==null) return snapshot;
       for(let key in snapshot.users){
         let  rewardSum=0;
-      //  console.log(rewardSum);
-    //    console.log(key,JSON.stringify(snapshot.users[key]));
         for(let i=0;i<noC;i++){
-        //  console.log(key,JSON.stringify(snapshot.users[key].mountInfo[i]));
-          rewardSum+=snapshot.users[key].mountInfo[i].amountMoney*this.state.survived[i]/100;
+          rewardSum+=Math.floor(snapshot.users[key].mountInfo[i].amountMoney*this.state.survived[i]/100);
         }
-     //  console.log(rewardSum);
-       // console.log(snapshot.users[key].username,Math.floor(rewardSum));
-       // console.log(JSON.stringify(snapshot.users[key].messages.queue));
+
+
        const Reward=rewardSum+500;
+       const message=`리워드와 월급 포함 ${Reward} 지급되었습니다.`;
        snapshot.users[key].asset+=Reward;
+
         if(snapshot.users[key].messages.queue==undefined){
-          snapshot.users[key].messages.queue={0:`리워드와 월급 포함 ${Reward} 지급되었습니다.`};
+          snapshot.users[key].messages.queue={0:message};
         }
         else{
           const leng=snapshot.users[key].messages.queue.length;
           snapshot.users[key].messages.queue={...snapshot.users[key].messages.queue,
-             [snapshot.users[key].messages.queue.length]: `리워드와 월급 포함 ${Reward} 지급되었습니다.`};
+             [snapshot.users[key].messages.queue.length]: message};
         }
         
       }
@@ -204,6 +202,7 @@ onClickRewardButton=async (e)=>{
         </p>
         <p>
         What percentage of the amount of money the participants invest in a company are compensated?
+        <br></br>+ 월급까지 자동 지급
         <form onSubmit={this.onClickRewardButton}>
        <div>{rewardlist}</div>
        <button>submit</button>
