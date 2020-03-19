@@ -13,6 +13,9 @@ class AdminPage extends Component {
       companies: [],
       eliminated: [],
       survived:[],
+      setHour:'',
+      setMinute:'',
+      setSecond:'',
     };
     for (let i = 0; i < noC; i++) {
       this.state.eliminated.push(false);
@@ -156,6 +159,14 @@ onClickRewardButton=async (e)=>{
     this.setState({ survived: list });
 }
 
+onTimeChange=(event)=>{
+  this.setState({ [event.target.name]: event.target.value });
+}
+onClickTimeSetButton=(e)=>{
+  e.preventDefault();
+
+  this.setState({setHour:'',setMinute:'',setSecond:''});
+}
   render() {
 
     const { users, loading, companies } = this.state;
@@ -192,6 +203,7 @@ onClickRewardButton=async (e)=>{
         </table>
 
         <h1>Control</h1>
+
         <p>
           <label>
             <div>Can I invest now? {this.state.checked ? 'YES' : 'NO'}</div>
@@ -200,6 +212,20 @@ onClickRewardButton=async (e)=>{
           </label>
         </p>
         <p>
+
+        <p>
+          When does this round end?
+          <form onSubmit={this.onClickTimeSetButton}>
+
+          <input placeholder="HH" size={3} value={this.state.setHour} name="setHour" onChange={this.onTimeChange}></input>
+          <input placeholder="MM" size={3} value={this.state.setMinute}name="setMinute" onChange={this.onTimeChange}></input>
+          <input placeholder="SS" size={3} value={this.state.setSecond} name="setSecond" onChange={this.onTimeChange}></input>
+          <button>submit</button>
+
+
+          </form>
+        </p>
+
         What percentage of the amount of money the participants invest in a company are compensated?
         <br></br>+ 월급까지 자동 지급
         <form onSubmit={this.onClickRewardButton}>

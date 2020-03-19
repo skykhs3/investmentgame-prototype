@@ -129,7 +129,7 @@ class HomePage extends React.Component {
       <div>
         <h1>{username} 님의 잔고 ${asset}</h1>
         <RoundDisplay round={round} caniinvest={caniinvest} />
-        <TimeDisplay />
+        <TimeDisplay firebase={this.props.firebase}/>
         <table border={1}>
           <th>기업명</th>
           <th>누적 투자액</th>
