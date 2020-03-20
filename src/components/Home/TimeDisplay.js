@@ -22,7 +22,7 @@ class TimeDisplay extends React.Component{
             this.setState({limitedhour:Obj.hour,limitedminute:Obj.minute,limitedsecond:Obj.second});
         });
     }
-    onClockHandler=({output, previousOutput, moment}) => {
+    onClockHandler=async({output, previousOutput, moment}) => {
         //console.log(JSON.stringify(Number(output)));
         const hms=Number(output);
          let {hour,minute,second}=this.state;
@@ -30,10 +30,25 @@ class TimeDisplay extends React.Component{
          minute=((hms-second)/100)%100;
          hour=(hms-minute*100-second)/10000;
          //console.log(hour,minute,second);
-         if(second%10==0)
-            this.setState({style2:{color:'red'}});
-        else
-            this.setState({style2:{color:'black'}});
+         this.setState({second:second,minute:minute,hour:hour})
+
+         const {limitedhour,limitedminute,limitedsecond}=this.state;
+        let diff=limitedhour*3600+limitedminute*60+limitedsecond-3600*this.state.hour-60*this.state.minute-this.state.second;
+
+        if(diff==0){
+            await this.props.firebase.db.ref('/gamestate/caniinvest').transaction(snapshot=>{
+                if(snapshot==null )return snapshot;
+                snapshot=false;
+                return snapshot;
+            });
+            
+            alert('라운드 종료되었습니다.');
+        }
+         
+        //  if(second%10==0)
+        //     this.setState({style2:{color:'red',display:'none'}});
+        // else
+        //     this.setState({style2:{color:'black',display:'none'}});
          
     }
     render(){
@@ -42,6 +57,8 @@ class TimeDisplay extends React.Component{
         //  let b= moment('1995-12-25 01:01:00');
         //  console.log(a.diff(b)) ;
         const {limitedhour,limitedminute,limitedsecond}=this.state;
+        let diff=limitedhour*3600+limitedminute*60+limitedsecond-3600*this.state.hour-60*this.state.minute-this.state.second;
+    
         return(
 
         <div>
@@ -49,9 +66,12 @@ class TimeDisplay extends React.Component{
         <div style={{color:'blue'}}  >
             현재 시각은 <Clock format={'HH 시: mm 분: ss 초'} ticking={true} timezone={'Asia/Seoul'}/> 입니다.
         </div>
-        <div>{limitedhour}시 {limitedminute}분 {limitedsecond}초</div>
-        <div style={this.state.style2}>
-            현재 시각은 <Clock format={'HHmmss'} ticking={true} timezone={'Asia/Seoul'} onChange={this.onClockHandler}/> 입니다.
+        {this.props.caniinvest ?
+        (<div>투자 종료 시각은 {limitedhour}시 {limitedminute}분 {limitedsecond}초 입니다.<br></br>
+        종료까지 {Math.floor(diff/60)}분 {diff%60}초 남았습니다.</div>) : null}
+        
+        <div style={{display:'none'}} >
+        현재 시각은 <Clock format={'HHmmss'} ticking={true} timezone={'Asia/Seoul'} onChange={this.onClockHandler}/> 입니다.
         </div>
         </div>
         );

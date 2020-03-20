@@ -4,7 +4,7 @@ class RoundDisplay extends React.Component{
         return(
         <div>
         <div>현재 {this.props.round} 라운드 진행 중 </div>
-        <div>지금 {this.props.caniinvest==true ? "투자 가능" : "투자 불가능"}</div>
+        <div>현재 투자 <span style={{color:'red'}}>{this.props.caniinvest==true ? "가능합니다" : "불가능합니다"}</span></div>
         </div>
         );
     }

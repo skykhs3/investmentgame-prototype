@@ -3,6 +3,7 @@ import { AuthUserContext, withAuthorization } from '../Session';
 import { withFirebase } from '../Firebase';
 import noC from '../../constants/noC';
 import Switch from "react-switch";
+import Clock from 'react-live-clock'
 
 class AdminPage extends Component {
   constructor(props) {
@@ -90,8 +91,12 @@ class AdminPage extends Component {
 
   onSwitchClick(checked) {
     this.setState({ checked });
-    this.props.firebase.db.ref('/gamestate/caniinvest').transaction(snapshot => {
-      snapshot = checked;
+    this.props.firebase.db.ref('/gamestate').transaction(snapshot => {
+      if(snapshot==null) return snapshot;
+      if(checked==true){snapshot.round++;
+   
+      }
+      snapshot.caniinvest = checked;
       return snapshot;
     });
   }
@@ -162,9 +167,16 @@ onClickRewardButton=async (e)=>{
 onTimeChange=(event)=>{
   this.setState({ [event.target.name]: event.target.value });
 }
-onClickTimeSetButton=(e)=>{
+onClickTimeSetButton= async(e)=>{
   e.preventDefault();
-
+  await this.props.firebase.db.ref('/gamestate/timetoend').transaction(snapshot=>{
+    console.log(JSON.stringify(snapshot));
+    if(snapshot==null) return snapshot;
+    snapshot.hour=Number(this.state.setHour);
+    snapshot.minute=Number(this.state.setMinute);
+    snapshot.second=Number(this.state.setSecond);
+    return snapshot;
+  });
   this.setState({setHour:'',setMinute:'',setSecond:''});
 }
   render() {
@@ -198,15 +210,15 @@ onClickTimeSetButton=(e)=>{
 
     return (
       <div>
-        <table border={1}>
-
-        </table>
+        <div style={{color:'blue'}}  >
+            현재 시각은 <Clock format={'HH 시: mm 분: ss 초'} ticking={true} timezone={'Asia/Seoul'}/> 입니다.
+        </div>
 
         <h1>Control</h1>
 
         <p>
           <label>
-            <div>Can I invest now? {this.state.checked ? 'YES' : 'NO'}</div>
+            <div>Can I invest now? {this.state.checked ? 'YES' : 'NO'} </div>
 
             <Switch onChange={this.onSwitchClick} checked={this.state.checked} />
           </label>
@@ -214,7 +226,7 @@ onClickTimeSetButton=(e)=>{
         <p>
 
         <p>
-          When does this round end?
+          When does this round end? <b>(You must do it before you start the next round)</b>
           <form onSubmit={this.onClickTimeSetButton}>
 
           <input placeholder="HH" size={3} value={this.state.setHour} name="setHour" onChange={this.onTimeChange}></input>

@@ -9,6 +9,7 @@ import CoInfo from './CoInfo'
 import noC from '../../constants/noC'
 import { confirmAlert } from 'react-confirm-alert'; // Import
 import 'react-confirm-alert/src/react-confirm-alert.css';
+import NumericInput from 'react-numeric-input';
 class HomePage extends React.Component {
 
   constructor(props) {
@@ -127,20 +128,27 @@ class HomePage extends React.Component {
     return (
 
       <div>
+        {/* <NumericInput min={0} max={100} value={50}/> */}
         <h1>{username} 님의 잔고 ${asset}</h1>
         <RoundDisplay round={round} caniinvest={caniinvest} />
-        <TimeDisplay firebase={this.props.firebase}/>
+        <TimeDisplay firebase={this.props.firebase} caniinvest={caniinvest}/>
+        <p>
         <table border={1}>
+          <tr>
           <th>기업명</th>
-          <th>누적 투자액</th>
-          <th>투자 or 회수할 금액</th>
+          <th >누적 투자액</th>
+          <th >금액</th>
+          </tr>
+
           {item}
+          
           <tr>
             <td>Total</td>
             <td>{sum}</td>
             <td>{sum2}</td>
           </tr>
         </table>
+        </p>
       </div>
 
     );

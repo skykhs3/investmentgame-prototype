@@ -50,12 +50,11 @@ class CoInfo extends React.Component{
          alert('Please enter numbers only!');
         }
         else{
+            // 현재 자산이 투자하기 충분하냐, 정수 범위 안넘냐, 음수 아니냐
             await this.props.firebase.user(this.props.firebase.auth.currentUser.uid).transaction((post)=>{
                 if (post) {
-                    // console.log(JSON.stringify(post));
-                    // console.log(this.props.Coname);
-                    // console.log(this.props.Conum);
-                    if(post.asset-Number(this.state.money)<0 || Number(this.state.money)<0){
+                     console.log((this.state.money),Number.isSafeInteger(Number(this.state.money)));
+                    if(post.asset-Number(this.state.money)<0 ||!Number.isSafeInteger(Number(this.state.money)) || Number(this.state.money)<0){
                         alert('Invaild');
                         return(post);
                     }
@@ -80,7 +79,7 @@ class CoInfo extends React.Component{
         else{
             await this.props.firebase.user(this.props.firebase.auth.currentUser.uid).transaction((post)=>{
                 if (post) {
-                    if(post.mountInfo[this.props.Conum].amountMoney-Number(this.state.money)<0 || Number(this.state.money)<0){
+                    if(post.mountInfo[this.props.Conum].amountMoney-Number(this.state.money)<0 || !Number.isSafeInteger(Number(this.state.money)) || Number(this.state.money)<0){
                         alert('Invaild');
                         return(post);
                     }
@@ -105,9 +104,10 @@ class CoInfo extends React.Component{
         <tr>
         <td>{this.props.Coname}</td>
         <td>{this.props.amountMoney}</td>
-        <td><input
+        <td ><input style={{width:'60px'}}
           name="money"
           type='number'
+         
           value={this.state.money}
           onChange={this.onChange}
           placeholder="0"
@@ -115,7 +115,7 @@ class CoInfo extends React.Component{
 
         <td><button type="submit" onClick={this.handleInvest} disabled={!this.state.survive || !this.props.caniinvest} >투자</button></td>
         <td><button type="submit" onClick={this.handleWithdraw} disabled={!this.state.survive || !this.props.caniinvest}>철회</button></td>
-        <td><button type="submit" onClick={this.handleReset}>입력 초기화</button></td>
+        <td><button type="submit" onClick={this.handleReset}>Reset</button></td>
         {/* <td><button type="submit" onClick={this.arrowFunction}>Testbtn</button></td> */}
         </tr>
         );
