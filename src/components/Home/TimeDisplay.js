@@ -67,8 +67,8 @@ class TimeDisplay extends React.Component{
             현재 시각은 <Clock format={'HH 시: mm 분: ss 초'} ticking={true} timezone={'Asia/Seoul'}/> 입니다.
         </div>
         {this.props.caniinvest ?
-        (<div>투자 종료 시각은 {limitedhour}시 {limitedminute}분 {limitedsecond}초 입니다.<br></br>
-        종료까지 {Math.floor(diff/60)}분 {diff%60}초 남았습니다.</div>) : null}
+        (<div><div>투자 종료 시각은 {limitedhour}시 {limitedminute}분 {limitedsecond}초 입니다.</div>
+        <div style={{color:'red'}}>종료까지 {Math.floor(diff/60)}분 {diff%60}초 남았습니다.</div></div>) : null}
         
         <div style={{display:'none'}} >
         현재 시각은 <Clock format={'HHmmss'} ticking={true} timezone={'Asia/Seoul'} onChange={this.onClockHandler}/> 입니다.

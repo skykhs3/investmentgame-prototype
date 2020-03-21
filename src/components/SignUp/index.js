@@ -45,6 +45,7 @@ class SignUpFormBase extends Component {
             email,
             asset:1000,
             mountInfo:mountInfo2,
+            messages:{front:-1},
           });
       })
       .then(() => {

@@ -97,14 +97,19 @@ class CoInfo extends React.Component{
             
         }
     }
-    
+   
     render(){
       //  console.log(this.state);
+      let companyName=(<td>{this.props.Coname}</td>);
+      if(!this.state.survive){
+        console.log(this.props.survive);
+        companyName=(<td><del>{this.props.Coname}</del></td>);
+      }
         return(
         <tr>
-        <td>{this.props.Coname}</td>
+        {companyName}
         <td>{this.props.amountMoney}</td>
-        <td ><input style={{width:'60px'}}
+        <td ><input style={{width:'70px'}}
           name="money"
           type='number'
          
